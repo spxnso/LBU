@@ -1,7 +1,7 @@
 
 # 🔍 Lua Bytecode Utility
 
-A high-performance Lua Bytecode Decompiler that help you read bytecode. This tool is designed for educational purposes, helping developers understand and analyze compiled Lua scripts.
+A high-performance Lua Bytecode Decompiler that help you read bytecode. This tool is designed for Lua 5.1.5, helping developers understand and analyze compiled Lua scripts.
 
 ---
 
