@@ -73,9 +73,3 @@ Contributions are welcome! Please follow these steps:
 ## 📜 License
 
 This project is licensed under the MIT License. See the `LICENSE` file for more details.
-
----
-
-## ⚠️ Disclaimer
-
-This tool is for educational and research purposes only. The authors are not responsible for any misuse of the software.
