@@ -11,7 +11,7 @@ local s = os.clock()
 local bytecode, file = fs:readFile(fs:openFile("output.luac", "rb"))
 Decompiler = Decompiler.new(bytecode)
 local result = Decompiler:Decompile(bytecode)
--- print(json.encode(result))
+--print(json.encode(result))
 
 local e = os.clock()
 local total = e - s
