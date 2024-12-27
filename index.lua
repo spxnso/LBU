@@ -1,15 +1,13 @@
 -- MIT License
 -- Copyright (c) 2024 spxnso
-local s = os.clock()
 package.path = package.path ..
                    ";./modules/utils/?.lua;./modules/interpreter/?.lua;./modules/decompiler/?.lua"
-
+os.execute("luac -o output.luac input.lua")
 local fs = require("fs")
 local json = require("json")
 local Decompiler = require("decompiler")
 
-os.execute("luac -o output.luac input.lua")
-
+local s = os.clock()
 local bytecode, file = fs:readFile(fs:openFile("output.luac", "rb"))
 Decompiler = Decompiler.new(bytecode)
 local result = Decompiler:Decompile(bytecode)

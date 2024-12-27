@@ -1,7 +1,16 @@
 
 # 🔍 Lua Bytecode Utility
 
-A high-performance Lua Bytecode Decompiler that transforms compiled Lua bytecode back into human-readable Lua source code. This tool is designed for educational purposes, helping developers understand and analyze compiled Lua scripts.
+A high-performance Lua Bytecode Decompiler that help you read bytecode. This tool is designed for educational purposes, helping developers understand and analyze compiled Lua scripts.
+
+---
+
+## ✨ Features
+
+- ⚡ **Fast Performance**: Optimized for quick decompilation of complex bytecode files.
+- 🔧 **Opcode Support**: Supports a wide range of Lua opcodes, including `ABC`, `ABx`, and `AsBx` types.
+- 🌍 **Cross-Platform**: Compatible with major operating systems (Windows, macOS, Linux).
+- 🛡️ **Error Handling**: Gracefully handles malformed or corrupted bytecode.
 
 ---
 

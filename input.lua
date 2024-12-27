@@ -1,1 +1,1 @@
-print("Hello, World!", "Hey")
+local a = 5

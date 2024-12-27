@@ -2,77 +2,49 @@ local Decompiler = {}
 local bit = require("modules.utils.bit32")
 Decompiler.__index = Decompiler
 
+local floor = math.floor
+local char = string.char
+
 function Decompiler.new(bytecode)
-    if type(bytecode) == "string" then
-        bytecode = {string.byte(bytecode, 1, #bytecode)}
-    end
+    bytecode = {string.byte(bytecode, 1, #bytecode)}
     local self = setmetatable({}, Decompiler)
     self.bytecode = bytecode
     self.index = 0
     self.bigEndian = false
-    self.sizeT = 1
-    self.intSize = 1
     return self
 end
 
 function Decompiler:getByte()
-    local b = self.bytecode[self.index + 1]
-    self.index = self.index + 1
+    local bytecode = self.bytecode
+    local index = self.index
+    local b = bytecode[index + 1]
+    index = index + 1
+    self.index = index
     return b
 end
-
 function Decompiler:getInt32()
-    local i = 0
-    if self.bigEndian then
-        i = (self.bytecode[self.index + 1] * 256 ^ 3) +
-                (self.bytecode[self.index + 2] * 256 ^ 2) +
-                (self.bytecode[self.index + 3] * 256) +
-                self.bytecode[self.index + 4]
-    else
-        i = (self.bytecode[self.index + 1]) +
-                (self.bytecode[self.index + 2] * 256) +
-                (self.bytecode[self.index + 3] * 256 ^ 2) +
-                (self.bytecode[self.index + 4] * 256 ^ 3)
-    end
-    self.index = self.index + 4
-    return i
+    local bytecode = self.bytecode
+    local index = self.index
+    local b1, b2, b3, b4 = bytecode[index + 1], bytecode[index + 2],
+                           bytecode[index + 3], bytecode[index + 4]
+    index = index + 4
+    self.index = index
+    return bit.bor(bit:lshift(b1, 0), bit:lshift(b2, 8), bit:lshift(b3, 16),
+                   bit:lshift(b4, 24))
 end
 
 function Decompiler:getInt()
     local i = 0
-    if self.bigEndian then
-        for j = 1, self.intSize do
-            i = i * 256 + self.bytecode[self.index + j]
-        end
-    else
-        for j = self.intSize, 1, -1 do
-            i = i * 256 + self.bytecode[self.index + j]
-        end
-    end
-    self.index = self.index + self.intSize
+    for j = 4, 1, -1 do i = i * 256 + self.bytecode[self.index + j] end
+    self.index = self.index + 4
     return i
-end
-
-function Decompiler:getSizeT()
-    local s = 0
-    if self.bigEndian then
-        for j = 1, self.sizeT do
-            s = s * 256 + self.bytecode[self.index + j]
-        end
-    else
-        for j = self.sizeT, 1, -1 do
-            s = s * 256 + self.bytecode[self.index + j]
-        end
-    end
-    self.index = self.index + self.sizeT
-    return s
 end
 
 function Decompiler:getDouble()
     local lowInt = self:getInt()
     local highInt = self:getInt()
 
-    local sign = bit:band(highInt, 0x80000000) ~= 0 and -1 or 1
+    local sign = (bit:band(highInt, 0x80000000) ~= 0) and -1 or 1
     local exponent = bit:band(bit:rshift(highInt, 20), 0x7FF)
     local fraction = (bit:band(highInt, 0xFFFFF) * 4294967296.0 + lowInt) /
                          (2 ^ 52)
@@ -80,14 +52,13 @@ function Decompiler:getDouble()
 
     return double
 end
-
 function Decompiler:getString(size)
-    size = self:getSizeT()
+    size = self:getInt()
     if size == 0 then return "" end
 
     local s = ""
     for i = self.index + 1, self.index + size do
-        s = s .. string.char(self.bytecode[i])
+        s = s .. char(self.bytecode[i])
     end
 
     self.index = self.index + size
@@ -195,27 +166,22 @@ function Decompiler:DecodeChunk()
         Instruction["OPCODE"] = opcode
         Instruction["MNEMONIC"] = opinfo.mnemonic
         Instruction["TYPE"] = opinfo.type
+        local a = floor(instr / (2 ^ 6)) % 256
         if opinfo.type == "ABC" then
             Instruction["REGISTERS"] = {
-                A = math.floor(instr / (2 ^ 6)) % 256,
-                B = {
-                    VALUE = math.floor(instr / (2 ^ 23)) % 512,
-                    MODE = opinfo.b
-                },
-                C = {
-                    VALUE = math.floor(instr / (2 ^ 14)) % 512,
-                    MODE = opinfo.c
-                }
+                A = a,
+                B = {VALUE = floor(instr / (2 ^ 23)) % 512, MODE = opinfo.b},
+                C = {VALUE = floor(instr / (2 ^ 14)) % 512, MODE = opinfo.c}
             }
         elseif opinfo.type == "ABx" then
             Instruction["REGISTERS"] = {
-                A = math.floor(instr / (2 ^ 6)) % 256,
-                Bx = {VALUE = math.floor(instr / (2 ^ 14)), MODE = opinfo.b}
+                A = a,
+                Bx = {VALUE = floor(instr / (2 ^ 14)), MODE = opinfo.b}
             }
         else
-            local Bx = math.floor(instr / (2 ^ 14))
+            local Bx = floor(instr / (2 ^ 14))
             Instruction["REGISTERS"] = {
-                A = math.floor(instr / (2 ^ 6)) % 256,
+                A = a,
                 sBx = {VALUE = Bx - 131071, MODE = opinfo.b}
             }
         end
