@@ -1,5 +1,5 @@
 
-# 🔍 Lua Bytecode Decompiler
+# 🔍 Lua Bytecode Utility
 
 A high-performance Lua Bytecode Decompiler that transforms compiled Lua bytecode back into human-readable Lua source code. This tool is designed for educational purposes, helping developers understand and analyze compiled Lua scripts.
 
