@@ -9,7 +9,7 @@ local Decompiler = require("decompiler")
 
 local s = os.clock()
 local bytecode, file = fs:readFile(fs:openFile("output.luac", "rb"))
-Decompiler = Decompiler.new(bytecode, true)
+Decompiler = Decompiler.new(bytecode, true) -- the second argument enables colored prints.
 local result = Decompiler:Decompile(bytecode)
 --print(json.encode(result))
 local e = os.clock()

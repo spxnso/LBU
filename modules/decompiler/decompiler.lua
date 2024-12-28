@@ -46,7 +46,7 @@ function chunkPrint(chunk)
                              Instruction["TYPE"], mode,
                              Instruction["REGISTERS"].A, b,
                              Instruction["REGISTERS"].C and
-                                 Instruction["REGISTERS"].C.VALUE or "0"))
+                                 Instruction["REGISTERS"].C.VALUE or "-1"))
 
     end
     cPrint(colors["yellow"],
@@ -174,8 +174,8 @@ function Decompiler:Decompile()
 
     local chunk = self:DecodeChunk()
 
-    cPrint(colors["cyan"], "\n================================ " .. "Chunk" ..
-               " ================================")
+    cPrint(colors["cyan"], "\n======================================== " .. "Chunk" ..
+               " ========================================")
 
     cPrint(colors["yellow"],
            "\n================ " .. "Metadata" .. " ================")
@@ -195,10 +195,15 @@ function Decompiler:Decompile()
            "Stack: " .. colors["green"] .. chunk["STACK"] .. colors["reset"])
     chunkPrint(chunk)
     if (#chunk["PROTOS"] ~= 0) then
-        cPrint(colors["yellow"],
-               "\n================ " .. "Prototypes" .. " ================")
+        cPrint(colors["cyan"],
+               "\n================================ " .. "Prototypes" ..
+                   " ================================")
     end
-    for k, v in pairs(chunk["PROTOS"]) do chunkPrint(v) end
+    for k, v in pairs(chunk["PROTOS"]) do
+        cPrint(colors["red"], "\n==================== " .. "Proto: " .. k ..
+                   " ====================")
+        chunkPrint(v)
+    end
     return {header, chunk}
 end
 
@@ -215,8 +220,8 @@ function Decompiler:DecodeHeader()
     header["L_NUMBER_SIZE"] = self:getByte()
     header["INTEGRAL_FLAG"] = self:getByte()
 
-    cPrint(colors["cyan"], "\n================================ " .. "Header" ..
-               " ================================")
+    cPrint(colors["cyan"], "\n======================================== " .. "Header" ..
+               " ========================================")
     cPrint(colors["magenta"], "Version: " .. colors["green"] ..
                (header["VM_VERSION"] == 0x51 and "Lua 5.1" or "Not Lua") ..
                colors["reset"])
@@ -280,7 +285,7 @@ function Decompiler:DecodeChunk()
         elseif opinfo.type == "ABx" then
             Instruction["REGISTERS"] = {
                 A = a,
-                Bx = {VALUE = floor(instr / (2 ^ 14)), MODE = opinfo.b}
+                Bx = {VALUE = floor(instr / (2 ^ 14)), MODE = opinfo.b},
             }
         else
             local Bx = floor(instr / (2 ^ 14))
