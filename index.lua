@@ -19,7 +19,6 @@ local size = file:seek("end")
 local interpretationStart = os.clock()
 Interpreter = Interpreter.new(result[2], getfenv(0))
 local r = Interpreter:Wrap()
-table.foreach(Interpreter, print)
 local interpretationEnd = os.clock()
 local intepreationTotal = interpretationEnd - interpretationStart
 -- print(json.encode(result))

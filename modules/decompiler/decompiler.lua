@@ -366,15 +366,15 @@ function Decompiler:DecodeChunk()
                 end
             end
         elseif Instruction["TYPE"] == "ABx" then
-            if Instruction["REGISTERS"]["B"].MODE == "OpArgK" then
-                if Instruction["REGISTERS"]["B"].VALUE >= 256 then
-                    local ConstantRef = Instruction["REGISTERS"]["B"].VALUE -
+            if Instruction["REGISTERS"]["Bx"].MODE == "OpArgK" then
+                if Instruction["REGISTERS"]["Bx"].VALUE >= 256 then
+                    local ConstantRef = Instruction["REGISTERS"]["Bx"].VALUE -
                                             256
-                    Instruction["REGISTERS"]["B"].CONSTANT =
+                    Instruction["REGISTERS"]["Bx"].CONSTANT =
                         chunk["CONSTANTS"][ConstantRef]
                 else
-                    Instruction["REGISTERS"]["B"].CONSTANT =
-                        chunk["CONSTANTS"][Instruction["REGISTERS"]["B"].VALUE]
+                    Instruction["REGISTERS"]["Bx"].CONSTANT =
+                        chunk["CONSTANTS"][Instruction["REGISTERS"]["Bx"].VALUE]
                 end
             end
         end
