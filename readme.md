@@ -1,16 +1,16 @@
 
-# 🔍 Lua Bytecode Utility
+<div align="center">
 
-A high-performance Lua Bytecode Decompiler that help you read bytecode. This tool is designed for Lua 5.1.5, helping developers understand and analyze compiled Lua scripts.
+# Lua Bytecode Utility
+
+A high-performance Lua Bytecode Decompiler & Interpreter that helps you read and understand and execute bytecode. Designed for Lua 5.1.5, this tool makes it easy for developers to analyze compiled Lua scripts.
 
 ---
 
-## ✨ Features
+## ⚡️ Features
 
-- ⚡ **Fast Performance**: Optimized for quick decompilation of complex bytecode files.
-- 🔧 **Opcode Support**: Supports a wide range of Lua opcodes, including `ABC`, `ABx`, and `AsBx` types.
-- 🌍 **Cross-Platform**: Compatible with major operating systems (Windows, macOS, Linux).
-- 🛡️ **Error Handling**: Gracefully handles malformed or corrupted bytecode.
+- **Fast Performance**: Optimized for quick decompilation & interpretation of complex bytecode files.
+- **Opcode Support**: Supports a wide range of Lua opcodes, including `ABC`, `ABx`, and `AsBx` types.
 
 ---
 
@@ -35,7 +35,6 @@ A high-performance Lua Bytecode Decompiler that help you read bytecode. This too
 2. Install dependencies:
    ```bash
    luarocks install json
-   luarocks install fs
    ```
 
 3. Verify `luac` is installed:
@@ -48,23 +47,23 @@ A high-performance Lua Bytecode Decompiler that help you read bytecode. This too
 ## 🛠️ Usage
 
 ### Decompiling a Lua Script
+
 1. Create a Lua script to decompile:
    ```lua
    -- input.lua
    print("Hello, world!")
    ```
 
-3. Run the decompiler:
+2. Run the index file:
    ```bash
    lua index.lua
    ```
-
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these steps:
+Contributions are welcome! Follow these steps to contribute:
 
 1. Fork the repository.
 2. Create a feature branch:
@@ -83,20 +82,4 @@ Contributions are welcome! Please follow these steps:
 
 This project is licensed under the MIT License. See the `LICENSE` file for more details.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</div>
