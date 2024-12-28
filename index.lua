@@ -4,7 +4,6 @@ package.path = package.path ..
                    ";./modules/utils/?.lua;./modules/interpreter/?.lua;./modules/decompiler/?.lua"
 os.execute("luac -o output.luac input.lua")
 local fs = require("fs")
-local json = require("json")
 local Decompiler = require("decompiler")
 local Interpreter = require("interpreter")
 
@@ -21,7 +20,7 @@ Interpreter = Interpreter.new(result[2], getfenv(0))
 local r = Interpreter:Wrap()
 local interpretationEnd = os.clock()
 local intepreationTotal = interpretationEnd - interpretationStart
--- print(json.encode(result))
+
 
 fs:closeFile("output.luac")
 print("\n----------------------")

@@ -22,9 +22,6 @@ A high-performance Lua Bytecode Decompiler & Interpreter for Lua 5.1.5, designed
 - **Lua Version**: Compatible with Lua 5.1 bytecode.
 - **Dependencies**:
   - `luac` (to generate Lua bytecode files)
-  - Lua modules:
-    - `json` (for structured data output)
-    - `fs` (for file system operations)
 
 ---
 
@@ -35,13 +32,7 @@ A high-performance Lua Bytecode Decompiler & Interpreter for Lua 5.1.5, designed
    git clone https://github.com/spxnso/lbu.git
    cd lbu
    ```
-
-2. Install dependencies:
-   ```bash
-   luarocks install json
-   ```
-
-3. Ensure `luac` is installed:
+2. Ensure `luac` is installed:
    ```bash
    luac -v
    ```

@@ -1,5 +1,5 @@
 local Decompiler = {}
-local bit = require("modules.utils.bit32")
+local bit = require("bit32")
 Decompiler.__index = Decompiler
 
 local floor = math.floor
