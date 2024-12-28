@@ -9,9 +9,9 @@ local Decompiler = require("decompiler")
 
 local s = os.clock()
 local bytecode, file = fs:readFile(fs:openFile("output.luac", "rb"))
-Decompiler = Decompiler.new(bytecode)
+Decompiler = Decompiler.new(bytecode, true)
 local result = Decompiler:Decompile(bytecode)
-
+--print(json.encode(result))
 local e = os.clock()
 local total = e - s
 local size = file:seek("end")

@@ -4,13 +4,72 @@ Decompiler.__index = Decompiler
 
 local floor = math.floor
 local char = string.char
+local cprint;
 
-function Decompiler.new(bytecode)
+local colors = {
+    reset = "\27[0m",
+    red = "\27[31m",
+    green = "\27[32m",
+    yellow = "\27[33m",
+    blue = "\27[34m",
+    magenta = "\27[35m",
+    cyan = "\27[36m",
+    white = "\27[37m",
+    bold = "\27[1m"
+}
+
+local function cPrint(color, text)
+    if cprint == true then print(color .. text .. colors.reset) end
+end
+
+function chunkPrint(chunk)
+    cPrint(colors["yellow"],
+           "\n================ " .. "Instructions" .. " ================")
+    cPrint(colors["magenta"], "Mnemonic   Opcode   Type   Opmode   A   B   C")
+
+    for k, Instruction in pairs(chunk["INSTRUCTIONS"]) do
+        local mode = Instruction["REGISTERS"].B and
+                         Instruction["REGISTERS"].B.MODE or
+                         (Instruction["REGISTERS"].Bx and
+                             Instruction["REGISTERS"].Bx.MODE or
+                             (Instruction["REGISTERS"].sBx and
+                                 Instruction["REGISTERS"].sBx.MODE or "N/A"))
+        local b = Instruction["REGISTERS"].B and
+                      Instruction["REGISTERS"].B.VALUE or
+                      (Instruction["REGISTERS"].Bx and
+                          Instruction["REGISTERS"].Bx.VALUE or
+                          (Instruction["REGISTERS"].sBx and
+                              Instruction["REGISTERS"].sBx.VALUE or "N/A"))
+        cPrint(colors["green"],
+               string.format("%-12s %-7s %-6s %-7s %-3d %-3s %-3s",
+                             Instruction["MNEMONIC"], Instruction["OPCODE"],
+                             Instruction["TYPE"], mode,
+                             Instruction["REGISTERS"].A, b,
+                             Instruction["REGISTERS"].C and
+                                 Instruction["REGISTERS"].C.VALUE or "0"))
+
+    end
+    cPrint(colors["yellow"],
+           "\n================ " .. "Constants" .. " ================")
+    cPrint(colors["magenta"],
+           string.format("%-8s %-8s %-8s", "Type", "Pos", "Value"))
+    for k, Constant in pairs(chunk["CONSTANTS"]) do
+        local constant_t = Constant["TYPE"]
+        local data = Constant["DATA"]
+        cPrint(colors["green"], string.format("%-8s %-8s %-8s",
+                                              constant_t == 1 and "Boolean" or
+                                                  constant_t == 3 and "Double" or
+                                                  constant_t == 4 and "String" or
+                                                  "Unknown", k, data or "N/A"))
+    end
+end
+
+function Decompiler.new(bytecode, p)
     bytecode = {string.byte(bytecode, 1, #bytecode)}
     local self = setmetatable({}, Decompiler)
     self.bytecode = bytecode
     self.index = 0
-    self.bigEndian = false
+    cprint = p or false
     return self
 end
 
@@ -115,12 +174,37 @@ function Decompiler:Decompile()
 
     local chunk = self:DecodeChunk()
 
+    cPrint(colors["cyan"], "\n================================ " .. "Chunk" ..
+               " ================================")
+
+    cPrint(colors["yellow"],
+           "\n================ " .. "Metadata" .. " ================")
+    cPrint(colors["magenta"],
+           "Name: " .. colors["green"] .. chunk["NAME"] .. colors["reset"])
+    cPrint(colors["magenta"], "First Line: " .. colors["green"] ..
+               chunk["FIRST_LINE"] .. colors["reset"])
+    cPrint(colors["magenta"], "Last Line: " .. colors["green"] ..
+               chunk["LAST_LINE"] .. colors["reset"])
+    cPrint(colors["magenta"], "Upvalues: " .. colors["green"] ..
+               chunk["UPVALUES"] .. colors["reset"])
+    cPrint(colors["magenta"], "Arguments: " .. colors["green"] ..
+               chunk["ARGUMENTS"] .. colors["reset"])
+    cPrint(colors["magenta"],
+           "VARG: " .. colors["green"] .. chunk["VARG"] .. colors["reset"])
+    cPrint(colors["magenta"],
+           "Stack: " .. colors["green"] .. chunk["STACK"] .. colors["reset"])
+    chunkPrint(chunk)
+    if (#chunk["PROTOS"] ~= 0) then
+        cPrint(colors["yellow"],
+               "\n================ " .. "Prototypes" .. " ================")
+    end
+    for k, v in pairs(chunk["PROTOS"]) do chunkPrint(v) end
     return {header, chunk}
 end
 
 function Decompiler:DecodeHeader()
-    self.index = 4 -- skipping the signature
     local header = {}
+    self.index = 4
 
     header["VM_VERSION"] = self:getByte()
     header["FORMAT"] = self:getByte()
@@ -131,9 +215,29 @@ function Decompiler:DecodeHeader()
     header["L_NUMBER_SIZE"] = self:getByte()
     header["INTEGRAL_FLAG"] = self:getByte()
 
-    self.intSize = header["INT_SIZE"]
-    self.sizeT = header["SIZE_T"]
-
+    cPrint(colors["cyan"], "\n================================ " .. "Header" ..
+               " ================================")
+    cPrint(colors["magenta"], "Version: " .. colors["green"] ..
+               (header["VM_VERSION"] == 0x51 and "Lua 5.1" or "Not Lua") ..
+               colors["reset"])
+    cPrint(colors["magenta"],
+           "Format: " .. colors["green"] .. header["FORMAT"] .. colors["reset"])
+    cPrint(colors["magenta"], "Endianness: " .. colors["green"] ..
+               (header["ENDIANNESS"] == 1 and "Little Endian" or "Big Endian") ..
+               colors["reset"])
+    cPrint(colors["magenta"], "IntSize: " .. colors["green"] ..
+               header["INT_SIZE"] .. colors["reset"])
+    cPrint(colors["magenta"],
+           "SizeT: " .. colors["green"] .. header["SIZE_T"] .. colors["reset"])
+    cPrint(colors["magenta"],
+           "InstructionSize: " .. colors["green"] .. header["INSTRUCTION_SIZE"] ..
+               colors["reset"])
+    cPrint(colors["magenta"],
+           "LNumberSize: " .. colors["green"] .. header["L_NUMBER_SIZE"] ..
+               colors["reset"])
+    cPrint(colors["magenta"],
+           "IntegralFlag: " .. colors["green"] .. header["INTEGRAL_FLAG"] ..
+               colors["reset"])
     return header
 end
 
@@ -185,6 +289,7 @@ function Decompiler:DecodeChunk()
                 sBx = {VALUE = Bx - 131071, MODE = opinfo.b}
             }
         end
+
         --[[
         Instruction 1: opcode = 5, mnemonic = GETGLOBAL, type = ABx, a = 0, b = 0, c = 0
         Instruction 2: opcode = 1, mnemonic = LOADK, type = ABx, a = 1, b = 0, c = 1
@@ -194,6 +299,7 @@ function Decompiler:DecodeChunk()
 
         table.insert(chunk["INSTRUCTIONS"], Instruction)
     end
+
     num = self:getInt()
     for i = 1, num do
         local constant_t = self:getByte()
@@ -206,8 +312,9 @@ function Decompiler:DecodeChunk()
         elseif constant_t == 4 then
             data = self:getString()
         end
-        table.insert(chunk["CONSTANTS"],
-                     {["TYPE"] = constant_t, ["DATA"] = data})
+
+        chunk["CONSTANTS"][i - 1] = {["TYPE"] = constant_t, ["DATA"] = data}
+
     end
 
     num = self:getInt()
