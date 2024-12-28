@@ -1,30 +1,34 @@
 
-<div align="center">
-
 # Lua Bytecode Utility
 
-A high-performance Lua Bytecode Decompiler & Interpreter that helps you read and understand and execute bytecode. Designed for Lua 5.1.5, this tool makes it easy for developers to analyze compiled Lua scripts.
+A high-performance Lua Bytecode Decompiler & Interpreter for Lua 5.1.5, designed to help developers analyze and execute compiled Lua scripts efficiently.
+
+[![Forks](https://img.shields.io/github/forks/spxnso/lbu?style=social)](https://github.com/spxnso/lbu/forks)
+[![Stars](https://img.shields.io/github/stars/spxnso/lbu?style=social)](https://github.com/spxnso/lbu/stars)
+[![Issues](https://img.shields.io/github/issues/spxnso/lbu)](https://github.com/spxnso/lbu/issues)
+[![License](https://img.shields.io/github/license/spxnso/lbu)](https://github.com/spxnso/lbu/blob/main/LICENSE)
 
 ---
 
-## ⚡️ Features
+## Features
 
-- **Fast Performance**: Optimized for quick decompilation & interpretation of complex bytecode files.
-- **Opcode Support**: Supports a wide range of Lua opcodes, including `ABC`, `ABx`, and `AsBx` types.
+- **Optimized Performance**: Fast decompilation & interpretation for complex Lua bytecode files.
+- **Opcode Support**: Handles all Lua opcodes.
 
 ---
 
-## 📋 Requirements
+## Requirements
 
 - **Lua Version**: Compatible with Lua 5.1 bytecode.
 - **Dependencies**:
-  - `luac` (for generating bytecode files)
+  - `luac` (to generate Lua bytecode files)
   - Lua modules:
-    - `json` (For structured data output)
+    - `json` (for structured data output)
+    - `fs` (for file system operations)
 
 ---
 
-## 📥 Installation
+## Installation
 
 1. Clone the repository:
    ```bash
@@ -37,49 +41,57 @@ A high-performance Lua Bytecode Decompiler & Interpreter that helps you read and
    luarocks install json
    ```
 
-3. Verify `luac` is installed:
+3. Ensure `luac` is installed:
    ```bash
    luac -v
    ```
 
 ---
 
-## 🛠️ Usage
+## Usage
 
-### Decompiling a Lua Script
+### Decompiling & Interpreting a Lua Script
 
-1. Create a Lua script to decompile:
+1. Create a Lua script (e.g., `input.lua`):
    ```lua
    -- input.lua
    print("Hello, world!")
    ```
 
-2. Run the index file:
+2. Run LBU:
    ```bash
    lua index.lua
    ```
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are welcome! Follow these steps to contribute:
+Contributions are always welcome! To contribute:
 
 1. Fork the repository.
-2. Create a feature branch:
+2. Create a new branch:
    ```bash
    git checkout -b feature-name
    ```
-3. Commit changes:
+3. Commit your changes:
    ```bash
    git commit -m "Add feature-name"
    ```
-4. Push and submit a pull request.
+4. Push your changes and create a pull request.
 
 ---
 
-## 📜 License
+## Special Thanks
 
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
+- **[Lua Community](https://www.lua.org/)**: For creating and maintaining Lua, which powers this tool.
+- **[GitHub](https://github.com/)**: For providing a platform for open-source collaboration.
+- **[Contributors](https://github.com/spxnso/lbu/graphs/contributors)**: For improving this project through valuable contributions.
+- **oxidaneofficial**: For teaching me Lua 5.1.5's VM structure.
+- **[Rerubi](https://github.com/Rerumu/Rerubi)**: For the inspiration
 
-</div>
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/spxnso/lbu/blob/main/LICENSE) file for details.
