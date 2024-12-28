@@ -174,7 +174,8 @@ function Decompiler:Decompile()
 
     local chunk = self:DecodeChunk()
 
-    cPrint(colors["cyan"], "\n======================================== " .. "Chunk" ..
+    cPrint(colors["cyan"],
+           "\n======================================== " .. "Chunk" ..
                " ========================================")
 
     cPrint(colors["yellow"],
@@ -220,7 +221,8 @@ function Decompiler:DecodeHeader()
     header["L_NUMBER_SIZE"] = self:getByte()
     header["INTEGRAL_FLAG"] = self:getByte()
 
-    cPrint(colors["cyan"], "\n======================================== " .. "Header" ..
+    cPrint(colors["cyan"],
+           "\n======================================== " .. "Header" ..
                " ========================================")
     cPrint(colors["magenta"], "Version: " .. colors["green"] ..
                (header["VM_VERSION"] == 0x51 and "Lua 5.1" or "Not Lua") ..
@@ -285,7 +287,7 @@ function Decompiler:DecodeChunk()
         elseif opinfo.type == "ABx" then
             Instruction["REGISTERS"] = {
                 A = a,
-                Bx = {VALUE = floor(instr / (2 ^ 14)), MODE = opinfo.b},
+                Bx = {VALUE = floor(instr / (2 ^ 14)), MODE = opinfo.b}
             }
         else
             local Bx = floor(instr / (2 ^ 14))
@@ -336,6 +338,47 @@ function Decompiler:DecodeChunk()
     end
     num = self:getInt()
     for i = 1, num do self:getString() end
+
+    for k, Instruction in pairs(chunk["INSTRUCTIONS"]) do
+        if Instruction["TYPE"] == "ABC" then
+            if Instruction["REGISTERS"]["B"].MODE == "OpArgK" then
+                if Instruction["REGISTERS"]["B"].VALUE >= 256 then
+                    local ConstantRef = Instruction["REGISTERS"]["B"].VALUE -
+                                            256
+                    Instruction["REGISTERS"]["B"].CONSTANT =
+                        chunk["CONSTANTS"][ConstantRef]
+                else
+                    Instruction["REGISTERS"]["B"].CONSTANT =
+                        chunk["CONSTANTS"][Instruction["REGISTERS"]["B"].VALUE]
+                end
+            end
+
+            if Instruction["REGISTERS"]["C"].MODE == "OpArgK" then
+                if Instruction["REGISTERS"]["C"].VALUE >= 256 then
+                    local ConstantRef = Instruction["REGISTERS"]["C"].VALUE -
+                                            256
+                    Instruction["REGISTERS"]["C"].CONSTANT =
+                        chunk["CONSTANTS"][ConstantRef]
+
+                else
+                    Instruction["REGISTERS"]["C"].CONSTANT =
+                        chunk["CONSTANTS"][Instruction["REGISTERS"]["C"].VALUE]
+                end
+            end
+        elseif Instruction["TYPE"] == "ABx" then
+            if Instruction["REGISTERS"]["B"].MODE == "OpArgK" then
+                if Instruction["REGISTERS"]["B"].VALUE >= 256 then
+                    local ConstantRef = Instruction["REGISTERS"]["B"].VALUE -
+                                            256
+                    Instruction["REGISTERS"]["B"].CONSTANT =
+                        chunk["CONSTANTS"][ConstantRef]
+                else
+                    Instruction["REGISTERS"]["B"].CONSTANT =
+                        chunk["CONSTANTS"][Instruction["REGISTERS"]["B"].VALUE]
+                end
+            end
+        end
+    end
 
     return chunk
 end

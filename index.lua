@@ -6,19 +6,29 @@ os.execute("luac -o output.luac input.lua")
 local fs = require("fs")
 local json = require("json")
 local Decompiler = require("decompiler")
+local Interpreter = require("interpreter")
 
-local s = os.clock()
+local decompilationStart = os.clock()
 local bytecode, file = fs:readFile(fs:openFile("output.luac", "rb"))
 Decompiler = Decompiler.new(bytecode, true) -- the second argument enables colored prints.
 local result = Decompiler:Decompile(bytecode)
---print(json.encode(result))
-local e = os.clock()
-local total = e - s
+local decompilationEnd = os.clock()
+local decompilationTotal = decompilationEnd - decompilationStart
 local size = file:seek("end")
+
+local interpretationStart = os.clock()
+Interpreter = Interpreter.new(result[2], getfenv(0))
+local r = Interpreter:Wrap()
+table.foreach(Interpreter, print)
+local interpretationEnd = os.clock()
+local intepreationTotal = interpretationEnd - interpretationStart
+-- print(json.encode(result))
+
 fs:closeFile("output.luac")
 print("\n----------------------")
-print(string.format("Succesfully decompiled your code!"))
+print(string.format("Succesfully decompiled & interpreted your code!"))
 print("----------------------")
-print(string.format("Decompilation Time: %.6f seconds", total))
+print(string.format("Decompilation Time: %.6f seconds", decompilationTotal))
+print(string.format("Interpretation Time: %.6f seconds", intepreationTotal))
 print(string.format("Bytecode File Size: %d bytes", size))
 print("----------------------")
