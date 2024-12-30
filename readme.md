@@ -15,6 +15,11 @@ A high-performance Lua Bytecode Decompiler & Interpreter for Lua 5.1.5, designed
 - **Optimized Performance**: Fast decompilation & interpretation for complex Lua bytecode files.
 - **Opcode Support**: Handles all Lua opcodes.
 
+## TODOS
+
+- **Handle larger file size**: When the file size contains too much bytes, the decompiler gets broken:  ```lua 
+local bytecode = {string.byte(bytecode, 1, #bytecode)}
+```
 ---
 
 ## Requirements

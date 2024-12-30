@@ -15,13 +15,13 @@ local decompilationEnd = os.clock()
 local decompilationTotal = decompilationEnd - decompilationStart
 local size = file:seek("end")
 
---[[
+
 local interpretationStart = os.clock()
 Interpreter = Interpreter.new(result[2], getfenv(0))
 local r = Interpreter:Wrap()
 local interpretationEnd = os.clock()
 local intepreationTotal = interpretationEnd - interpretationStart
---]]
+
 
 fs:closeFile("output.luac")
 print("\n----------------------")

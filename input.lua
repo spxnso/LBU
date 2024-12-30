@@ -1,2 +1,3 @@
-print("Hello, World!")
-print("Bye, wolr!d")
+local t = {}
+t.Enum = 2
+print(type(t.Enum), type(t))
