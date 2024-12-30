@@ -18,8 +18,8 @@ A high-performance Lua Bytecode Decompiler & Interpreter for Lua 5.1.5, designed
 ## TODOS
 
 - **Handle larger file size**: When the file size contains too much bytes, the decompiler gets broken:  ```lua 
-local bytecode = {string.byte(bytecode, 1, #bytecode)}
-```
+local bytecode = {string.byte(bytecode, 1, #bytecode)}```
+
 ---
 
 ## Requirements
