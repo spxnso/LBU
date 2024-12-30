@@ -15,18 +15,19 @@ local decompilationEnd = os.clock()
 local decompilationTotal = decompilationEnd - decompilationStart
 local size = file:seek("end")
 
+--[[
 local interpretationStart = os.clock()
 Interpreter = Interpreter.new(result[2], getfenv(0))
 local r = Interpreter:Wrap()
 local interpretationEnd = os.clock()
 local intepreationTotal = interpretationEnd - interpretationStart
-
+--]]
 
 fs:closeFile("output.luac")
-print("----------------------")
+print("\n----------------------")
 print(string.format("Succesfully decompiled & interpreted your code!"))
 print("----------------------")
 print(string.format("Decompilation Time: %.6f seconds", decompilationTotal))
-print(string.format("Interpretation Time: %.6f seconds", intepreationTotal))
+print(string.format("Interpretation Time: %.6f seconds", intepreationTotal or 0))
 print(string.format("Bytecode File Size: %d bytes", size))
 print("----------------------")
