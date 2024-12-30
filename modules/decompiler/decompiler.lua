@@ -60,7 +60,7 @@ function chunkPrint(chunk)
                                               constant_t == 1 and "Boolean" or
                                                   constant_t == 3 and "Double" or
                                                   constant_t == 4 and "String" or
-                                                  "Unknown", k, data or "N/A"))
+                                                  "Unknown", k, tostring(data) or "N/A"))
     end
 end
 
@@ -319,7 +319,6 @@ function Decompiler:DecodeChunk()
         elseif constant_t == 4 then
             data = self:getString()
         end
-
         chunk["CONSTANTS"][i - 1] = {["TYPE"] = constant_t, ["DATA"] = data}
 
     end

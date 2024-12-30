@@ -1,5 +1,5 @@
-local s = {}
+            --[[
 
-s.Enum = 1
-
-print(s)
+            --]]
+            local x = 5
+            print(type(tostring(x)))
