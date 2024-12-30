@@ -64,29 +64,26 @@ function Interpreter:Wrap()
             local saveLimit;
             local edx;
             local args;
+
             args = {}
-            paramsCount = 0
+            paramsCount = (Instruction["REGISTERS"]["B"]["VALUE"] == 0 and
+                              stackTop - Instruction["REGISTERS"]["A"] or
+                              Instruction["REGISTERS"]["B"]["VALUE"] - 1)
+
             if Instruction["REGISTERS"]["B"]["VALUE"] ~= 1 then
-                if Instruction["REGISTERS"]["B"]["VALUE"] ~= 0 then
-                    paramsCount = Instruction["REGISTERS"]["A"] + Instruction["REGISTERS"]["B"]["VALUE"] - 1 -- Thanks to @rerumu for that part
-                else
-                    paramsCount = stackTop
-                end
-                edx = 0
-                for index = Instruction["REGISTERS"]["A"] + 1, paramsCount do
-                    edx = edx + 1;
-                    args[edx] = mem[index];
-                end
-                results = {mem[Instruction["REGISTERS"]["A"]](unpack(args))}
+                
+                results = { mem[Instruction["REGISTERS"]["A"]](unpack(mem, Instruction["REGISTERS"]["A"] + 1, Instruction["REGISTERS"]["A"] + paramsCount)) } -- Inspired from Fiu's CALL Opcode which was handled amazingly!
             else
-                results = {mem[Instruction["REGISTERS"]["A"]]()}
+                results = { mem[Instruction["REGISTERS"]["A"]]() }
             end
 
             stackTop = Instruction["REGISTERS"]["A"] + paramsCount - 1
+
             saveLimit = 0
             if Instruction["REGISTERS"]["C"]["VALUE"] ~= 1 then
                 if Instruction["REGISTERS"]["C"]["VALUE"] ~= 0 then
-                    saveLimit = Instruction["REGISTERS"]["A"] + Instruction["REGISTERS"]["C"]["VALUE"] - 2;
+                    saveLimit = Instruction["REGISTERS"]["A"] +
+                                    Instruction["REGISTERS"]["C"]["VALUE"] - 2;
                 else
                     saveLimit = paramsCount + Instruction["REGISTERS"]["A"] - 1
                 end
@@ -96,7 +93,6 @@ function Interpreter:Wrap()
                     mem[index] = results[edx]
                 end
             end
-
         elseif (Opcode == 30) then
             local returnsCount;
             local edx;
