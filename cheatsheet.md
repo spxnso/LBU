@@ -43,9 +43,11 @@ The chunk is organized as follows:
    - **Instructions** → Dynamic size
    - **Constants** → Dynamic size
    - **Protos** → Dynamic size
-   - **Debug Information** → Dynamic size
+   - **Debug Informations** → Dynamic size
 
 Well! Quite a few new terms for you, right? Don't worry, I'll break them down step by step. Here's a brief overview of what each component means:
    - The **metadata** is "kinda" similar to the header except that it contains **data about the file**, and not about the actual bytecode  (e.g., the file name).
-   - The **instructions** are like the step-by-step commands that Lua follows to run your code. Each instruction tells Lua what action to perform, like adding numbers, showing a message, or calling a function.
+   - The **instructions** are like the **step-by-step commands** that Lua follows to run your code. Each instruction tells Lua **what action to perform**, like adding numbers, showing a message, or calling a function.
    - The **constants** are the values in your Lua code. These can be things like **numbers**, **strings** (text), or **boolean** values (true/false).
+   - The **protos** are your **functions**. They have a **similar structure to the chunk** itself, meaning they contain **metadata**, **instructions**, **constants**, **protos** (for nested functions), and **debug informations**. In other words, each function is treated like a **small chunk**, with its own set of data and bytecode instructions.
+   - The **debug informations** are some "useless" informations that I won't present in this cheatsheet.
