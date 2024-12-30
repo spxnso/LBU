@@ -50,4 +50,17 @@ Well! Quite a few new terms for you, right? Don't worry, I'll break them down st
    - The **instructions** are like the **step-by-step commands** that Lua follows to run your code. Each instruction tells Lua **what action to perform**, like adding numbers, showing a message, or calling a function.
    - The **constants** are the values in your Lua code. These can be things like **numbers**, **strings** (text), or **boolean** values (true/false).
    - The **protos** are your **functions**. They have a **similar structure to the chunk** itself, meaning they contain **metadata**, **instructions**, **constants**, **protos** (for nested functions), and **debug informations**. In other words, each function is treated like a **small chunk**, with its own set of data and bytecode instructions.
-   - The **debug informations** are some "useless" informations that I won't present in this cheatsheet.
+   - The **debug informations** are some optional informations that I won't present in this cheatsheet.
+
+Now that you understand the chunk's structure, I am going tell you how to parse each component!
+
+##### 1. The Metadata
+   | Part Name          | Description                                                                 | Size       | Value       |
+   |--------------------|-----------------------------------------------------------------------------|------------|-------------|
+   | **Name**           | The input file's name.                                                      | String     | @{filename} |
+   | **First Line**     | The script's first line                                                     | Integer    | {Dynamic}   |
+   | **Last Line**      | The script's last line                                                      | Integer    | {Dynamic}   |
+   | **Upvalues Number**| The number of upvalues in the code.                                         | 1 byte     | {Dynamic}   |
+   | **Arguments Number**| The number of arguments in the code.                                       | 1 byte     | {Dynamic}   |
+   | **VAR_ARG FLAG**   | The VAR_ARG FLAG ( I might explain it later ).                              | 1 byte     | 1, 2 or 4   |
+   | **Stack Size**     | The number of used registers, the maximum stack size                        | 1 byte     | {Dynamic}   |
