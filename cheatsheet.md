@@ -19,12 +19,12 @@ Lua bytecode is divided into two parts:
 | **Chunk**          | The other part that contains instructions, constants, protos.               | Dynamic Size |
 
 #### 1. The Header
-The Header section holds **metadata** about the Lua bytecode, including the Lua version used for compilation, the endianness flag, and other crucial information that enables the Lua interpreter to correctly process the bytecode. The header has a fixed size of 12 bytes and is divided into 10 parts. Most of the values in the header are static and remain unchanged on **a x86 platform**.
+The Header section holds **metadata** about the Lua bytecode, including the Lua version used for compilation, the endianness flag, and other crucial information that enables the Lua interpreter to correctly process the bytecode. The header is **divided into 10 parts**. Most of the values in the header are **static** and remain **unchanged** on **a x86 platform**.
 
 | Part Name          | Description                                                                 | Size       | Value       |
 |--------------------|-----------------------------------------------------------------------------|------------|-------------|
-| **Signature**      | A unique identifier that marks the file as Lua bytecode.                    | 4 bytes    | 0x1b4c7561  |
-| **Version**        | Lua version number                                                          | 1 byte     | 0x81        |
+| **Signature**      | A unique identifier that marks the file as Lua bytecode.                    | 4 bytes    | 0x1b4c7561 or ESC Lua  |
+| **Version**        | Lua version number                                                          | 1 byte     | 0x81 (= 51)        |
 | **Format Version** | Lua format version (0=official version)                                     | 1 byte     | 0           |
 | **Endianness Flag**| Indicates the byte order used (little-endian or big-endian) in the bytecode.| 1 byte     | 0 (little-endian) |
 | **Size of Ints**   | Specifies the size (in bytes) of Lua integers.                              | 1 byte     | 4           |
@@ -39,12 +39,13 @@ The Chunk is the most **intriguing part** so far! It contains all the **essentia
 In this section, I will guide you on how to parse the information stored within the chunk.
 
 The chunk is organized as follows:
-   - Metadata → Dynamic size
-   - Instructions → Dynamic size
-   - Constants → Dynamic size
-   - Protos → Dynamic size
-   - Debug Information → Dynamic size
+   - **Metadata** → Dynamic size
+   - **Instructions** → Dynamic size
+   - **Constants** → Dynamic size
+   - **Protos** → Dynamic size
+   - **Debug Information** → Dynamic size
 
 Well! Quite a few new terms for you, right? Don't worry, I'll break them down step by step. Here's a brief overview of what each component means:
-   - The **metadata** is "kinda" similar to the header except that it contains data about the file, and not the actual bytecode  (e.g., the file name).
-   - The **instructions**
+   - The **metadata** is "kinda" similar to the header except that it contains **data about the file**, and not about the actual bytecode  (e.g., the file name).
+   - The **instructions** are like the step-by-step commands that Lua follows to run your code. Each instruction tells Lua what action to perform, like adding numbers, showing a message, or calling a function.
+   - The **constants** are the values in your Lua code. These can be things like **numbers**, **strings** (text), or **boolean** values (true/false).
