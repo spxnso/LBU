@@ -267,7 +267,6 @@ function Decompiler:DecodeChunk()
     chunk["DEBUG"] = {}
 
     num = self:getInt()
-    local tc = 1
     for i = 1, num do
         local Instruction = {}
 

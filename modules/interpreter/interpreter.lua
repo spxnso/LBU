@@ -1,4 +1,5 @@
--- I could not do this without the help of a-no-frills-introduction-to-lua-5.1-vm-instructions's pdf
+-- I could not do this without the help of a-no-frills-introduction-to-lua-5.1-vm-instructions's pdf, Rerubi & Fiu.
+-- Thanks to these amazing developers!
 local Interpreter = {}
 Interpreter.__index = Interpreter
 
@@ -7,7 +8,6 @@ local function _Returns(...) return select('#', ...), {...}; end
 function Interpreter.new(chunk, env)
     local self = setmetatable({}, Interpreter)
     self.Chunk = chunk
-    ---@diagnostic disable-next-line: deprecated
     self.Env = env or getfenv(0) or _ENV or _G;
     return self
 end
@@ -57,8 +57,7 @@ function Interpreter:Wrap()
                     mem[Instruction["REGISTERS"]["C"]["VALUE"]]
         elseif (Opcode == 10) then -- (*) NEWTABLE
             mem[Instruction["REGISTERS"]["A"]] = {}
-        elseif (Opcode == 28) then -- (*) CALL WITHOUT RERUBI
-            -- R(A) = Function to be called
+        elseif (Opcode == 28) then -- (*) CALL
             local results;
             local paramsCount;
             local saveLimit;

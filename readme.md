@@ -76,6 +76,7 @@ Contributions are always welcome! To contribute:
 ## Special Thanks
 
 - **[Lua Community](https://www.lua.org/)**: For creating and maintaining Lua, which powers this tool.
+- **[Fiu](https://github.com/rce-incorporated/Fiu)**: For some opcodes interpretation.
 - **[GitHub](https://github.com/)**: For providing a platform for open-source collaboration.
 - **[Contributors](https://github.com/spxnso/lbu/graphs/contributors)**: For improving this project through valuable contributions.
 - **oxidaneofficial**: For teaching me Lua 5.1.5's VM structure.
@@ -86,39 +87,3 @@ Contributions are always welcome! To contribute:
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/spxnso/lbu/blob/main/LICENSE) file for details.
-
--- The first CALL will be tostring
-
-            local paramsCount = 0
-            if Instruction["REGISTERS"]["B"]["VALUE"] >= 2 then
-                -- B - 1 arguments
-                
-                paramsCount = Instruction["REGISTERS"]["B"]["VALUE"] - 1
-                print(paramsCount==1)
-            elseif Instruction["REGISTERS"]["B"]["VALUE"] == 0 then
-                for index = Instruction["REGISTERS"]["A"] + 1, stackTop do
-                    paramsCount = paramsCount + 1
-                end
-            end
-
-            stackTop = Instruction["REGISTERS"]["A"] - 1
-            local edx = 0
-            local args = {}
-
-            if paramsCount ~= 0 then
-                for index = Instruction["REGISTERS"]["A"] + 1, paramsCount do
-                    edx = edx + 1;
-                    args[edx] = mem[index];
-                end;
-            end
-            
-            print(paramsCount, mem[Instruction["REGISTERS"]["A"]]==tostring)
-            local limit, results = paramsCount, mem[Instruction["REGISTERS"]["A"]](unpack(args, 1))
-            if Instruction["REGISTERS"]["C"]["VALUE"] >= 2 then
-                -- C - 1 saved results
-                
-            elseif Instruction["REGISTERS"]["B"]["VALUE"] == 0 then
-                for index = Instruction["REGISTERS"]["A"] + 1, stackTop do
-                    paramsCount = paramsCount + 1
-                end
-            end

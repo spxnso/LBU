@@ -64,3 +64,6 @@ Now that you understand the chunk's structure, I am going tell you how to parse 
    | **Arguments Number**| The number of arguments in the code.                                       | 1 byte     | {Dynamic}   |
    | **VAR_ARG FLAG**   | The VAR_ARG FLAG ( I might explain it later ).                              | 1 byte     | 1, 2 or 4   |
    | **Stack Size**     | The number of used registers, the maximum stack size                        | 1 byte     | {Dynamic}   |
+
+##### 2. The Instructions List
+   Before we begin, let me explain the content of an instruction in detail. As mentioned earlier, an instruction is like a **command** that Lua follows to run your code. 
