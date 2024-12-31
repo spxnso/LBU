@@ -47,6 +47,7 @@ function Interpreter:Wrap()
             mem[Instruction["REGISTERS"]["A"]] =
                 mem[Instruction["REGISTERS"]["B"].VALUE][Instruction["REGISTERS"]["C"]["CONSTANT"]["DATA"] or
                     mem[Instruction["REGISTERS"]["C"]["VALUE"]]]
+            print("GETTABLE")
         elseif (Opcode == 7) then -- (*) SETGLOBAL
             env[Instruction["REGISTERS"]["Bx"]["CONSTANT"]["DATA"]] =
                 mem[Instruction["REGISTERS"]["A"]]
@@ -72,7 +73,6 @@ function Interpreter:Wrap()
                               Instruction["REGISTERS"]["B"]["VALUE"] - 1)
 
             if Instruction["REGISTERS"]["B"]["VALUE"] ~= 1 then
-
                 results = {
                     mem[Instruction["REGISTERS"]["A"]](unpack(mem,
                                                               Instruction["REGISTERS"]["A"] +

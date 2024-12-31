@@ -103,14 +103,17 @@ function Decompiler:getDouble()
     local lowInt = self:getInt()
     local highInt = self:getInt()
 
-    local sign = (bit:band(highInt, 0x80000000) ~= 0) and -1 or 1
+    local sign = bit:band(highInt, 0x80000000) ~= 0 and -1 or 1
     local exponent = bit:band(bit:rshift(highInt, 20), 0x7FF)
-    local fraction = (bit:band(highInt, 0xFFFFF) * 4294967296.0 + lowInt) /
-                         (2 ^ 52)
-    local double = sign * (2 ^ (exponent - 1023)) * (1 + fraction)
-
+    local fraction = bit:band(highInt, 0xFFFFF) * 4294967296.0 + lowInt
+    if exponent == 0 then
+        fraction = fraction / (2 ^ 52)
+        return sign * fraction
+    end
+    local double = sign * (2 ^ (exponent - 1023)) * (1 + fraction / (2 ^ 52))
     return double
 end
+
 function Decompiler:getString(size)
     size = self:getInt()
     if size == 0 then return "" end
@@ -369,7 +372,6 @@ function Decompiler:DecodeChunk()
             end
 
             if Instruction["REGISTERS"]["C"].MODE == "OpArgK" then
-                print("C OPARGK")
                 if Instruction["REGISTERS"]["C"].VALUE >= 256 then
                     local ConstantRef = Instruction["REGISTERS"]["C"].VALUE -
                                             256

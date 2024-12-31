@@ -391,8 +391,6 @@ local function Wrap(Chunk, Env, Upvalues)
 					Stk[A]		= B[C];
 				elseif (Enum == 12) then -- ADD
 					local Stk = Stack;
-                    print("C REG", Inst[3])
-                    print(Inst[5])
 					Stk[Inst[1]]	= (Inst[4] or Stk[Inst[2]]) + (Inst[5] or Stk[Inst[3]]);
 				elseif (Enum == 13) then -- SUB
 					local Stk = Stack;
@@ -498,7 +496,7 @@ local function Wrap(Chunk, Env, Upvalues)
 
 							Args[Edx] = Stk[Idx];
 						end;
-
+                        print(Stk[A])
 						Limit, Results = _Returns(Stk[A](unpack(Args, 1, Limit - A)));
 					else
 						Limit, Results = _Returns(Stk[A]());
