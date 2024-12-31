@@ -57,6 +57,8 @@ function Interpreter:Wrap()
                     mem[Instruction["REGISTERS"]["C"]["VALUE"]]
         elseif (Opcode == 10) then -- (*) NEWTABLE
             mem[Instruction["REGISTERS"]["A"]] = {}
+        elseif (Opcode == 12) then -- (*) ADD
+            mem[Instruction["REGISTERS"]["A"]] = (Instruction["REGISTERS"]["B"]["CONSTANT"] and Instruction["REGISTERS"]["B"]["CONSTANT"]["DATA"] or mem[Instruction["REGISTERS"]["B"]["VALUE"]]) +  (Instruction["REGISTERS"]["C"]["CONSTANT"] and Instruction["REGISTERS"]["C"]["CONSTANT"]["DATA"] or mem[Instruction["REGISTERS"]["C"]["VALUE"]])
         elseif (Opcode == 28) then -- (*) CALL
             local results;
             local paramsCount;
@@ -70,10 +72,16 @@ function Interpreter:Wrap()
                               Instruction["REGISTERS"]["B"]["VALUE"] - 1)
 
             if Instruction["REGISTERS"]["B"]["VALUE"] ~= 1 then
-                
-                results = { mem[Instruction["REGISTERS"]["A"]](unpack(mem, Instruction["REGISTERS"]["A"] + 1, Instruction["REGISTERS"]["A"] + paramsCount)) } -- Inspired from Fiu's CALL Opcode which was handled amazingly!
+
+                results = {
+                    mem[Instruction["REGISTERS"]["A"]](unpack(mem,
+                                                              Instruction["REGISTERS"]["A"] +
+                                                                  1,
+                                                              Instruction["REGISTERS"]["A"] +
+                                                                  paramsCount))
+                } -- Inspired from Fiu's CALL Opcode which was handled amazingly!
             else
-                results = { mem[Instruction["REGISTERS"]["A"]]() }
+                results = {mem[Instruction["REGISTERS"]["A"]]()}
             end
 
             stackTop = Instruction["REGISTERS"]["A"] + paramsCount - 1

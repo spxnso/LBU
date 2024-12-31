@@ -6,7 +6,7 @@ os.execute("luac -o output.luac input.lua")
 local fs = require("fs")
 local Decompiler = require("decompiler")
 local Interpreter = require("interpreter")
-
+local Rerubi = require("rerubi")
 local decompilationStart = os.clock()
 local bytecode, file = fs:readFile(fs:openFile("output.luac", "rb"))
 Decompiler = Decompiler.new(bytecode, true) -- the second argument enables colored prints.
@@ -18,7 +18,11 @@ local size = file:seek("end")
 
 local interpretationStart = os.clock()
 Interpreter = Interpreter.new(result[2], getfenv(0))
+print("----------------------")
+local re = Rerubi(bytecode, getfenv(0))()
+print("----------------------")
 local r = Interpreter:Wrap()
+
 local interpretationEnd = os.clock()
 local intepreationTotal = interpretationEnd - interpretationStart
 
