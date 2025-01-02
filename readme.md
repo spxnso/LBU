@@ -1,7 +1,7 @@
 
 # Lua Bytecode Utility
 
-A high-performance Lua Bytecode Decompiler for Lua 5.1.5, designed to help developers analyze and execute compiled Lua scripts efficiently.
+A high-performance Lua Bytecode Deserializer & Interpreter for Lua 5.1.5, designed to help developers analyze and execute compiled Lua scripts efficiently.
 
 [![Forks](https://img.shields.io/github/forks/spxnso/lbu?style=social)](https://github.com/spxnso/lbu/forks)
 [![Stars](https://img.shields.io/github/stars/spxnso/lbu?style=social)](https://github.com/spxnso/lbu/stars)
@@ -9,20 +9,11 @@ A high-performance Lua Bytecode Decompiler for Lua 5.1.5, designed to help devel
 [![License](https://img.shields.io/github/license/spxnso/lbu)](https://github.com/spxnso/lbu/blob/main/LICENSE)
 
 ---
-
-
-## WARNING: Our interpreter is discontinued in favor of an upcoming rewrite!
+## Version: 1.0.0 [BETA]
 ## Features
 
-- **Optimized Performance**: Fast decompilation for complex Lua bytecode files.
+- **Optimized Performance**: Fast deserialization & execution for complex Lua bytecode files.
 - **Opcode Support**: Handles all Lua opcodes.
-
-## TODOS
-
-- **Handle larger file size**: When the file size contains too much bytes, the decompiler gets broken:  
-   ```lua 
-      local bytecode = {string.byte(bytecode, 1, #bytecode)}
-   ```
 
 ---
 
@@ -89,6 +80,7 @@ Contributions are always welcome! To contribute:
 - **[GitHub](https://github.com/)**: For providing a platform for open-source collaboration.
 - **[Contributors](https://github.com/spxnso/lbu/graphs/contributors)**: For improving this project through valuable contributions.
 - **oxidaneofficial**: For teaching me Lua 5.1.5's VM structure.
+- **Jeremiah.J**: For helping me improving the project!
 - **[Rerubi](https://github.com/Rerumu/Rerubi)**: For the inspiration
 
 ---

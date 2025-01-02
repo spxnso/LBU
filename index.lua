@@ -1,25 +1,32 @@
--- MIT License
--- Copyright (c) 2024 spxnso
--- The interpreter has been discontinued. Expect a faster, better rewrite soon!
-package.path = package.path ..
-                   ";./modules/utils/?.lua;./modules/interpreter/?.lua;./modules/decompiler/?.lua"
-os.execute("luac -o output.luac input.lua")
-local fs = require("fs")
-local Decompiler = require("decompiler")
-local Rerubi = require("rerubi")
-local decompilationStart = os.clock()
-local bytecode, file = fs:readFile(fs:openFile("output.luac", "rb"))
-Decompiler = Decompiler.new(bytecode, true) -- the second argument enables colored prints.
-local result = Decompiler:Decompile(bytecode)
-local decompilationEnd = os.clock()
-local decompilationTotal = decompilationEnd - decompilationStart
-local size = file:seek("end")
+package.path = package.path .. ";./modules/utils/?.lua;./modules/interpreter/?.lua;./modules/deserializer/?.lua";
+os.execute("luac -o output.luac input.lua");
+local fs = require("fs");
+local Decompiler = require("deserializer");
+local Interpreter = require("interpreter");
+local bytecode, file = fs:readFile(fs:openFile("output.luac", "rb"));
+local bytet = {};
+local Decompiler = Decompiler.new(bytecode, false); -- 2nd argument will enable debug prints, useful if you want to understand bytecode. Will slow down performances.
 
+local deserializationStart = os.clock();
+local result = Decompiler:Decompile(bytecode);
+local deserializationEnd = os.clock();
+local deserializationTotal = deserializationEnd - deserializationStart;
 
-fs:closeFile("output.luac")
-print("\n----------------------")
-print(string.format("Succesfully decompiled your code!"))
-print("----------------------")
-print(string.format("Decompilation Time: %.6f seconds", decompilationTotal))
-print(string.format("Bytecode File Size: %d bytes", size))
-print("----------------------")
+print("\n----------------------");
+local interpretationStart = os.clock();
+Interpreter = Interpreter.new(result[2], getfenv(0));
+Interpreter:Wrap();
+local interpretationEnd = os.clock();
+local interpretationTotal = interpretationEnd - interpretationStart;
+print("----------------------");
+local size = file:seek("end");
+fs:closeFile("input.lua")
+fs:closeFile("output.luac");
+
+print("\n----------------------");
+print(string.format("Succesfully decompiled your code!"));
+print("----------------------");
+print(string.format("Deserialization Time: %.6f seconds", deserializationTotal));
+print(string.format("Interpretation Time: %.6f seconds", interpretationTotal));
+print(string.format("Bytecode File Size: %d bytes", size));
+print("----------------------");
