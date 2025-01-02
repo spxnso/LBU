@@ -60,7 +60,8 @@ function chunkPrint(chunk)
                                               constant_t == 1 and "Boolean" or
                                                   constant_t == 3 and "Double" or
                                                   constant_t == 4 and "String" or
-                                                  "Unknown", k, tostring(data) or "N/A"))
+                                                  "Unknown", k,
+                                              tostring(data) or "N/A"))
     end
 end
 
@@ -129,22 +130,28 @@ end
 
 function getOpcodeInfo(opcode)
     local Opmode = {
-        {b = 'OpArgR', c='OpArgN'}, {b = 'OpArgK', c='OpArgN'}, {b = 'OpArgU', c='OpArgU'},
-        {b = 'OpArgR', c='OpArgN'}, {b = 'OpArgU', c='OpArgN'}, {b = 'OpArgK', c='OpArgN'},
-        {b = 'OpArgR', c='OpArgK'}, {b = 'OpArgK', c='OpArgN'}, {b = 'OpArgU', c='OpArgN'},
-        {b = 'OpArgK', c='OpArgK'}, {b = 'OpArgU', c='OpArgU'}, {b = 'OpArgR', c='OpArgK'},
-        {b = 'OpArgK', c='OpArgK'}, {b = 'OpArgK', c='OpArgK'}, {b = 'OpArgK', c='OpArgK'},
-        {b = 'OpArgK', c='OpArgK'}, {b = 'OpArgK', c='OpArgK'}, {b = 'OpArgK', c='OpArgK'},
-        {b = 'OpArgR', c='OpArgN'}, {b = 'OpArgR', c='OpArgN'}, {b = 'OpArgR', c='OpArgN'},
-        {b = 'OpArgR', c='OpArgR'}, {b = 'OpArgR', c='OpArgN'}, {b = 'OpArgK', c='OpArgK'},
-        {b = 'OpArgK', c='OpArgK'}, {b = 'OpArgK', c='OpArgK'}, {b = 'OpArgR', c='OpArgU'},
-        {b = 'OpArgR', c='OpArgU'}, {b = 'OpArgU', c='OpArgU'}, {b = 'OpArgU', c='OpArgU'},
-        {b = 'OpArgU', c='OpArgN'}, {b = 'OpArgR', c='OpArgN'}, {b = 'OpArgR', c='OpArgN'},
-        {b = 'OpArgN', c='OpArgU'}, {b = 'OpArgU', c='OpArgU'}, {b = 'OpArgN', c='OpArgN'},
-        {b = 'OpArgU', c='OpArgN'}, {b = 'OpArgU', c='OpArgN'}
+        {b = 'OpArgR', c = 'OpArgN'}, {b = 'OpArgK', c = 'OpArgN'},
+        {b = 'OpArgU', c = 'OpArgU'}, {b = 'OpArgR', c = 'OpArgN'},
+        {b = 'OpArgU', c = 'OpArgN'}, {b = 'OpArgK', c = 'OpArgN'},
+        {b = 'OpArgR', c = 'OpArgK'}, {b = 'OpArgK', c = 'OpArgN'},
+        {b = 'OpArgU', c = 'OpArgN'}, {b = 'OpArgK', c = 'OpArgK'},
+        {b = 'OpArgU', c = 'OpArgU'}, {b = 'OpArgR', c = 'OpArgK'},
+        {b = 'OpArgK', c = 'OpArgK'}, {b = 'OpArgK', c = 'OpArgK'},
+        {b = 'OpArgK', c = 'OpArgK'}, {b = 'OpArgK', c = 'OpArgK'},
+        {b = 'OpArgK', c = 'OpArgK'}, {b = 'OpArgK', c = 'OpArgK'},
+        {b = 'OpArgR', c = 'OpArgN'}, {b = 'OpArgR', c = 'OpArgN'},
+        {b = 'OpArgR', c = 'OpArgN'}, {b = 'OpArgR', c = 'OpArgR'},
+        {b = 'OpArgR', c = 'OpArgN'}, {b = 'OpArgK', c = 'OpArgK'},
+        {b = 'OpArgK', c = 'OpArgK'}, {b = 'OpArgK', c = 'OpArgK'},
+        {b = 'OpArgR', c = 'OpArgU'}, {b = 'OpArgR', c = 'OpArgU'},
+        {b = 'OpArgU', c = 'OpArgU'}, {b = 'OpArgU', c = 'OpArgU'},
+        {b = 'OpArgU', c = 'OpArgN'}, {b = 'OpArgR', c = 'OpArgN'},
+        {b = 'OpArgR', c = 'OpArgN'}, {b = 'OpArgN', c = 'OpArgU'},
+        {b = 'OpArgU', c = 'OpArgU'}, {b = 'OpArgN', c = 'OpArgN'},
+        {b = 'OpArgU', c = 'OpArgN'}, {b = 'OpArgU', c = 'OpArgN'}
     };
     local info = {
-        [0] = { type = "ABC", mnemonic = "MOVE", b = 'OpArgR', c = 'OpArgN'},
+        [0] = {type = "ABC", mnemonic = "MOVE", b = 'OpArgR', c = 'OpArgN'},
         {type = "ABx", mnemonic = "LOADK", b = 'OpArgK', c = 'OpArgN'},
         {type = "ABC", mnemonic = "LOADBOOL", b = 'OpArgU', c = 'OpArgU'},
         {type = "ABC", mnemonic = "LOADNIL", b = 'OpArgR', c = 'OpArgN'},
@@ -184,10 +191,9 @@ function getOpcodeInfo(opcode)
         {type = "ABC", mnemonic = "VARARG", b = 'OpArgU', c = 'OpArgU'} -- Fixed
     }
     info[opcode].b = Opmode[opcode + 1].b
-    info[opcode].c = Opmode[opcode+ 1].c
+    info[opcode].c = Opmode[opcode + 1].c
     return info[opcode]
 end
-
 
 function Decompiler:Decompile()
     local header = self:DecodeHeader()
@@ -365,22 +371,16 @@ function Decompiler:DecodeChunk()
                                             256
                     Instruction["REGISTERS"]["B"].CONSTANT =
                         chunk["CONSTANTS"][ConstantRef]
-                else
-                    Instruction["REGISTERS"]["B"].CONSTANT =
-                        chunk["CONSTANTS"][Instruction["REGISTERS"]["B"].VALUE]
                 end
             end
 
             if Instruction["REGISTERS"]["C"].MODE == "OpArgK" then
+
                 if Instruction["REGISTERS"]["C"].VALUE >= 256 then
                     local ConstantRef = Instruction["REGISTERS"]["C"].VALUE -
                                             256
                     Instruction["REGISTERS"]["C"].CONSTANT =
                         chunk["CONSTANTS"][ConstantRef]
-
-                else
-                    Instruction["REGISTERS"]["C"].CONSTANT =
-                        chunk["CONSTANTS"][Instruction["REGISTERS"]["C"].VALUE]
                 end
             end
         elseif Instruction["TYPE"] == "ABx" then
@@ -390,9 +390,6 @@ function Decompiler:DecodeChunk()
                                             256
                     Instruction["REGISTERS"]["Bx"].CONSTANT =
                         chunk["CONSTANTS"][ConstantRef]
-                else
-                    Instruction["REGISTERS"]["Bx"].CONSTANT =
-                        chunk["CONSTANTS"][Instruction["REGISTERS"]["Bx"].VALUE]
                 end
             end
         end

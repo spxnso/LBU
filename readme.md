@@ -1,7 +1,7 @@
 
 # Lua Bytecode Utility
 
-A high-performance Lua Bytecode Decompiler & Interpreter for Lua 5.1.5, designed to help developers analyze and execute compiled Lua scripts efficiently.
+A high-performance Lua Bytecode Decompiler for Lua 5.1.5, designed to help developers analyze and execute compiled Lua scripts efficiently.
 
 [![Forks](https://img.shields.io/github/forks/spxnso/lbu?style=social)](https://github.com/spxnso/lbu/forks)
 [![Stars](https://img.shields.io/github/stars/spxnso/lbu?style=social)](https://github.com/spxnso/lbu/stars)
@@ -10,9 +10,11 @@ A high-performance Lua Bytecode Decompiler & Interpreter for Lua 5.1.5, designed
 
 ---
 
+
+## WARNING: Our interpreter is discontinued in favor of an upcoming rewrite!
 ## Features
 
-- **Optimized Performance**: Fast decompilation & interpretation for complex Lua bytecode files.
+- **Optimized Performance**: Fast decompilation for complex Lua bytecode files.
 - **Opcode Support**: Handles all Lua opcodes.
 
 ## TODOS

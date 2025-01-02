@@ -1,11 +1,11 @@
 -- MIT License
 -- Copyright (c) 2024 spxnso
+-- The interpreter has been discontinued. Expect a faster, better rewrite soon!
 package.path = package.path ..
                    ";./modules/utils/?.lua;./modules/interpreter/?.lua;./modules/decompiler/?.lua"
 os.execute("luac -o output.luac input.lua")
 local fs = require("fs")
 local Decompiler = require("decompiler")
-local Interpreter = require("interpreter")
 local Rerubi = require("rerubi")
 local decompilationStart = os.clock()
 local bytecode, file = fs:readFile(fs:openFile("output.luac", "rb"))
@@ -16,22 +16,10 @@ local decompilationTotal = decompilationEnd - decompilationStart
 local size = file:seek("end")
 
 
-local interpretationStart = os.clock()
-Interpreter = Interpreter.new(result[2], getfenv(0))
-print("----------------------")
-local re = Rerubi(bytecode, getfenv(0))()
-print("----------------------")
-local r = Interpreter:Wrap()
-
-local interpretationEnd = os.clock()
-local intepreationTotal = interpretationEnd - interpretationStart
-
-
 fs:closeFile("output.luac")
 print("\n----------------------")
-print(string.format("Succesfully decompiled & interpreted your code!"))
+print(string.format("Succesfully decompiled your code!"))
 print("----------------------")
 print(string.format("Decompilation Time: %.6f seconds", decompilationTotal))
-print(string.format("Interpretation Time: %.6f seconds", intepreationTotal or 0))
 print(string.format("Bytecode File Size: %d bytes", size))
 print("----------------------")

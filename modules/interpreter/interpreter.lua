@@ -1,5 +1,4 @@
--- I could not do this without the help of a-no-frills-introduction-to-lua-5.1-vm-instructions's pdf, Rerubi & Fiu.
--- Thanks to these amazing developers!
+-- Discontinued in favor of an upcoming rewrite.
 local Interpreter = {}
 Interpreter.__index = Interpreter
 
@@ -23,13 +22,28 @@ function Interpreter:Wrap()
         pc = pc + 1
         if not Instruction then break end
         local Opcode = Instruction["OPCODE"]
+        local RK;
 
+        RK = {}
+        -- R(A) := R(B)[RK(C)]
+        if Instruction["REGISTERS"]["B"] and Instruction["REGISTERS"]["C"] ~= -1 then
+            -- ABC
+            RK[Instruction["REGISTERS"]["B"]["VALUE"]] = (chunk["CONSTANTS"][Instruction["REGISTERS"]["B"]["VALUE"]]["DATA"] or mem[Instruction["REGISTERS"]["B"]["VALUE"]])
+            RK[Instruction["REGISTERS"]["C"]["VALUE"]] = (chunk["CONSTANTS"][Instruction["REGISTERS"]["C"]["VALUE"]]["DATA"]  or mem[Instruction["REGISTERS"]["C"]["VALUE"]])
+        elseif Instruction["REGISTERS"]["Bx"] then
+            -- ABx
+            RK[Instruction["REGISTERS"]["Bx"]["VALUE"]] = (chunk["CONSTANTS"][Instruction["REGISTERS"]["Bx"]["VALUE"]]["DATA"]  or mem[Instruction["REGISTERS"]["Bx"]["VALUE"]])
+        else
+            -- AsBx
+        end
+
+        -- Missing opcodes: SELF; SETUPVALUE; GETUPVALUE
         if (Opcode == 0) then -- (*) MOVE
             mem[Instruction["REGISTERS"]["A"]] =
                 mem[Instruction["REGISTERS"]["B"]["VALUE"]]
         elseif (Opcode == 1) then -- (*) LOADK
             mem[Instruction["REGISTERS"]["A"]] =
-                Instruction["REGISTERS"]["Bx"]["CONSTANT"]["DATA"]
+                chunk["CONSTANTS"][Instruction["REGISTERS"]["Bx"]["VALUE"]]["DATA"] 
         elseif (Opcode == 2) then -- (*) LOADBOOL
             mem[Instruction["REGISTERS"]["A"]] =
                 (Instruction["REGISTERS"]["B"]["VALUE"] ~= 0)
@@ -47,19 +61,46 @@ function Interpreter:Wrap()
             mem[Instruction["REGISTERS"]["A"]] =
                 mem[Instruction["REGISTERS"]["B"].VALUE][Instruction["REGISTERS"]["C"]["CONSTANT"]["DATA"] or
                     mem[Instruction["REGISTERS"]["C"]["VALUE"]]]
-            print("GETTABLE")
         elseif (Opcode == 7) then -- (*) SETGLOBAL
             env[Instruction["REGISTERS"]["Bx"]["CONSTANT"]["DATA"]] =
                 mem[Instruction["REGISTERS"]["A"]]
         elseif (Opcode == 9) then -- (*) SETTABLE: R(A)[RK(B)] := RK(C)
-            mem[Instruction["REGISTERS"]["A"]][Instruction["REGISTERS"]["B"]["CONSTANT"]["DATA"] or
-                mem[Instruction["REGISTERS"]["B"]["VALUE"]]] =
-                Instruction["REGISTERS"]["C"]["CONSTANT"]["DATA"] or
-                    mem[Instruction["REGISTERS"]["C"]["VALUE"]]
+            mem[Instruction["REGISTERS"]["A"]][RK[Instruction["REGISTERS"]["C"]["VALUE"]]] =
+                RK[Instruction["REGISTERS"]["C"]["VALUE"]]
         elseif (Opcode == 10) then -- (*) NEWTABLE
             mem[Instruction["REGISTERS"]["A"]] = {}
         elseif (Opcode == 12) then -- (*) ADD
-            mem[Instruction["REGISTERS"]["A"]] = (Instruction["REGISTERS"]["B"]["CONSTANT"] and Instruction["REGISTERS"]["B"]["CONSTANT"]["DATA"] or mem[Instruction["REGISTERS"]["B"]["VALUE"]]) +  (Instruction["REGISTERS"]["C"]["CONSTANT"] and Instruction["REGISTERS"]["C"]["CONSTANT"]["DATA"] or mem[Instruction["REGISTERS"]["C"]["VALUE"]])
+
+            mem[Instruction["REGISTERS"]["A"]] = RK[Instruction["REGISTERS"]["B"]["VALUE"]] + RK[Instruction["REGISTERS"]["C"]["VALUE"]]
+        elseif (Opcode == 13) then -- (*) SUB
+
+            mem[Instruction["REGISTERS"]["A"]] = RK[Instruction["REGISTERS"]["B"]["VALUE"]] - RK[Instruction["REGISTERS"]["C"]["VALUE"]]
+        elseif (Opcode == 14) then -- (*) MUL
+            mem[Instruction["REGISTERS"]["A"]] =
+                RK[Instruction["REGISTERS"]["B"]["VALUE"]] -
+                    (type(RK[Instruction["REGISTERS"]["C"]["VALUE"]]) ~=
+                        "string" and RK[Instruction["REGISTERS"]["C"]["VALUE"]] or
+                        7)
+        elseif (Opcode == 15) then -- (*) DIV
+            mem[Instruction["REGISTERS"]["A"]] =
+                RK[Instruction["REGISTERS"]["B"]["VALUE"]] /
+                    RK[Instruction["REGISTERS"]["C"]["VALUE"]]
+        elseif (Opcode == 16) then -- (*) MOD
+            mem[Instruction["REGISTERS"]["A"]] =
+                (Instruction["REGISTERS"]["B"]["CONSTANT"] and
+                    Instruction["REGISTERS"]["B"]["CONSTANT"]["DATA"] or
+                    mem[Instruction["REGISTERS"]["B"]["VALUE"]]) %
+                    (Instruction["REGISTERS"]["C"]["CONSTANT"] and
+                        Instruction["REGISTERS"]["C"]["CONSTANT"]["DATA"] or
+                        mem[Instruction["REGISTERS"]["C"]["VALUE"]])
+        elseif (Opcode == 17) then -- (*) POW
+            mem[Instruction["REGISTERS"]["A"]] =
+                (Instruction["REGISTERS"]["B"]["CONSTANT"] and
+                    Instruction["REGISTERS"]["B"]["CONSTANT"]["DATA"] or
+                    mem[Instruction["REGISTERS"]["B"]["VALUE"]]) ^
+                    (Instruction["REGISTERS"]["C"]["CONSTANT"] and
+                        Instruction["REGISTERS"]["C"]["CONSTANT"]["DATA"] or
+                        mem[Instruction["REGISTERS"]["C"]["VALUE"]])
         elseif (Opcode == 28) then -- (*) CALL
             local results;
             local paramsCount;
@@ -126,6 +167,8 @@ function Interpreter:Wrap()
             else
                 return;
             end
+        else
+            print("UK")
         end
     end
 end

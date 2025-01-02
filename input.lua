@@ -1,2 +1,2 @@
-local y = 0 + 0
+local y = 5 * 2
 print(y)
