@@ -141,8 +141,6 @@ function Interpreter:Wrap()
             Stk[Instruction.A] = function(...)
                 return closureInterpreter:Wrap()
             end;
-		elseif (Opcode == 37) then -- VARARG 
-			-- SOON.
         end;
         self.Stk = Stk;
         pc = pc + 1;
