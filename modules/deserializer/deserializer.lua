@@ -36,8 +36,12 @@ function ChunkPrint(Chunk)
     cPrint(colors.magenta, string.format("%-8s %-8s %-8s", "Type", "Pos", "Value"));
     for k, Constant in pairs(Chunk.Constants) do
         local constant_t = Constant.Type;
-        local data = Constant.Value;
-        cPrint(colors.green, string.format("%-8s %-8s %-8s", constant_t, k, tostring(data) or "N/A"));
+        constant_t = tostring(constant_t or "N/A")
+        k = tostring(k or "N/A")
+        local value = Constant and Constant.Value or "N/A"
+        
+        cPrint(colors.green, string.format("%-8s %-8s %-8s", constant_t, k, value))
+    
     end
 end
 function Deserializer.new(bytecode, p)

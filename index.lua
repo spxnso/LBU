@@ -5,7 +5,7 @@ local Decompiler = require("deserializer");
 local Interpreter = require("interpreter");
 local bytecode, file = fs:readFile(fs:openFile("output.luac", "rb"));
 local bytet = {};
-local Decompiler = Decompiler.new(bytecode, false); -- 2nd argument will enable debug prints, useful if you want to understand bytecode. Will slow down performances.
+local Decompiler = Decompiler.new(bytecode, true); -- 2nd argument will enable debug prints, useful if you want to understand bytecode. Will slow down performances.
 
 local deserializationStart = os.clock();
 local result = Decompiler:Decompile(bytecode);
@@ -15,7 +15,7 @@ local deserializationTotal = deserializationEnd - deserializationStart;
 print("\n----------------------");
 local interpretationStart = os.clock();
 Interpreter = Interpreter.new(result[2], getfenv(0));
-Interpreter:Wrap();
+local t = Interpreter:Wrap();
 local interpretationEnd = os.clock();
 local interpretationTotal = interpretationEnd - interpretationStart;
 print("----------------------");
