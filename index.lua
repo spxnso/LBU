@@ -19,6 +19,7 @@ local t = Interpreter:Wrap();
 local interpretationEnd = os.clock();
 local interpretationTotal = interpretationEnd - interpretationStart;
 print("----------------------");
+
 local size = file:seek("end");
 fs:closeFile("input.lua")
 fs:closeFile("output.luac");

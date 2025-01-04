@@ -591,31 +591,9 @@ function Deserializer:DecodeChunk()
         self:getInt32();
         self:getInt32();
     end
-    for i = 1, self:getInt() do
-        self:getString();
-    end
-    for k, Instruction in pairs(Chunk.Instructions) do
-        if Instruction.Metadata.Type == "ABC" then
-            if Instruction.Metadata.Regs.B.Mode == "OpArgK" then
-                if Instruction.Metadata.Regs.B.Value >= 256 then
-                    local ConstantRef = Instruction.Metadata.Regs.B.Value - 256;
-                    Instruction.Metadata.Regs.B.Constant = Chunk.Constants[ConstantRef];
-                end
-            end
-            if Instruction.Metadata.Regs.C.Mode == "OpArgK" then
-                if Instruction.Metadata.Regs.C.Value >= 256 then
-                    local ConstantRef = Instruction.Metadata.Regs.C.Value - 256;
-                    Instruction.Metadata.Regs.C.Constant = Chunk.Constants[ConstantRef];
-                end
-            end
-        elseif Instruction.Metadata.Type == "ABx" then
-            if Instruction.Metadata.Regs.Bx.Mode == "OpArgK" then
-                if Instruction.Metadata.Regs.Bx.Value >= 256 then
-                    local ConstantRef = Instruction.Metadata.Bx.Value - 256;
-                    Instruction.Metadata.RegsBx.Constant = Chunk.Constants[ConstantRef];
-                end
-            end
-        end
+    for i = 1, self:getInt() do -- Upvalues
+        local s = self:getString(); -- Upvalue name
+        print(s)
     end
     return Chunk;
 end
