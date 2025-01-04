@@ -59,7 +59,7 @@
 ---
 
 ## Updates
-    - Removed useless constant lookup in deserializer.
+   - Removed useless constant lookup in deserializer.
 
 --- 
 
