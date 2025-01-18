@@ -40,7 +40,7 @@ function ChunkPrint(Chunk)
         k = tostring(k or "N/A")
         local value = Constant and Constant.Value or "N/A"
         
-        cPrint(colors.green, string.format("%-8s %-8s %-8s", constant_t, k, value))
+        cPrint(colors.green, string.format("%-8s %-8s %-8s", constant_t, k, tostring(value)))
     
     end
 end

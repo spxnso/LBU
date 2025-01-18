@@ -1,6 +1,7 @@
 package.path = package.path .. ";./modules/utils/?.lua;./modules/interpreter/?.lua;./modules/deserializer/?.lua";
 os.execute("luac -o output.luac input.lua");
 local fs = require("fs");
+local Rerubi = require("rerubi");
 local Decompiler = require("deserializer");
 local Interpreter = require("interpreter");
 local bytecode, file = fs:readFile(fs:openFile("output.luac", "rb"));
@@ -19,7 +20,7 @@ local t = Interpreter:Wrap();
 local interpretationEnd = os.clock();
 local interpretationTotal = interpretationEnd - interpretationStart;
 print("----------------------");
-
+local o = Rerubi(bytecode)()
 local size = file:seek("end");
 fs:closeFile("input.lua")
 fs:closeFile("output.luac");

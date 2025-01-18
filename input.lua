@@ -1,1 +1,5 @@
-print("LBU is working!")
+function Hello(...) 
+    print(...)
+end
+
+Hello("World!")
