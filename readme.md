@@ -61,6 +61,7 @@
 ## Updates
    - Removed useless constant lookup in deserializer.
 
+This project is not complete. The VM has many bugs, you may use it to learn about Lua's 5.1 VM.
 --- 
 
 ## About

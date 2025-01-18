@@ -1,5 +1,1 @@
-function Hello(...) 
-    print(...)
-end
-
-Hello("World!")
+print("Hello, World!")
